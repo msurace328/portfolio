@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Melissa Surace. Identity and access engineering in New York: Okta, MDM, lifecycle automation, Terraform, and AI agents in production.">
+<meta property="og:title" content="Melissa Surace">
+<meta property="og:description" content="Identity and access engineering: Okta, MDM, lifecycle automation, Terraform, and AI agents in production.">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Melissa Surace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: left-anchored editorial column with a live access ledger as the hero's right-hand object; sections separated by rules, not cards. */
+  :root {
+    --bg: #F4F6F3;
+    --bg-2: #E9EDE8;
+    --fg: #10141C;
+    --fg-2: #4A5261;
+    --fg-3: #7D8594;
+    --line: #CDD3CF;
+    --accent: #2437D9;
+    --accent-ink: #FFFFFF;
+    --ok: #157A62;
+    --warn: #B2590F;
+    --ledger-bg: #10141C;
+    --ledger-fg: #D9DEE8;
+    --ledger-dim: #7D8594;
+    --ledger-ok: #5BE0B4;
+    --display: 'Syne', 'Avenir Next', 'Segoe UI', sans-serif;
+    --body: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0E14; --bg-2: #131823; --fg: #E6E9EF; --fg-2: #AAB2C0; --fg-3: #7D8594; --line: #2A313D;
+      --accent: #8A98FF; --accent-ink: #0B0E14; --ok: #5BE0B4; --warn: #F0A35A;
+      --ledger-bg: #131823; --ledger-fg: #E6E9EF; --ledger-dim: #7D8594; --ledger-ok: #5BE0B4;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0E14; --bg-2: #131823; --fg: #E6E9EF; --fg-2: #AAB2C0; --fg-3: #7D8594; --line: #2A313D;
+    --accent: #8A98FF; --accent-ink: #0B0E14; --ok: #5BE0B4; --warn: #F0A35A;
+    --ledger-bg: #131823; --ledger-fg: #E6E9EF; --ledger-dim: #7D8594; --ledger-ok: #5BE0B4;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.6; margin: 0; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-3); }
+
+  /* Nav */
+  .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+  .brand { font-family: var(--display); font-weight: 800; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+  .nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; flex-wrap: wrap; }
+  .nav li a { font-size: 14px; color: var(--fg-2); text-decoration: none; font-weight: 600; }
+  .nav li a:hover { color: var(--accent); }
+
+  /* Hero */
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 40px; align-items: center; padding-block: 56px 48px; }
+  .hero h1 { font-size: clamp(40px, 6vw, 72px); font-weight: 800; line-height: 1.02; }
+  .hero h1 .thin { font-weight: 500; color: var(--fg-2); }
+  .lede { font-size: clamp(17px, 1.6vw, 20px); color: var(--fg-2); max-width: 36em; margin: 20px 0 0; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; font-family: var(--mono); font-size: 13px; color: var(--fg-3); }
+  .hero-meta span::before { content: "• "; color: var(--accent); }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--body); font-weight: 700; font-size: 15px; padding: 12px 18px; border-radius: 4px; text-decoration: none; border: 1px solid var(--fg); cursor: pointer; background: transparent; color: var(--fg); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn:hover { transform: translateY(-1px); }
+
+  /* Ledger */
+  .ledger { background: var(--ledger-bg); color: var(--ledger-fg); border-radius: 6px; padding: 18px 18px 14px; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; min-width: 0; box-shadow: 0 30px 60px -40px rgba(0,0,0,.6); }
+  .ledger-head { display: flex; justify-content: space-between; align-items: center; color: var(--ledger-dim); border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: 10px; margin-bottom: 10px; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
+  .ledger-head b { color: var(--ledger-ok); font-weight: 500; }
+  .ledger ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ledger li { display: grid; grid-template-columns: 54px 1fr; gap: 10px; opacity: 1; }
+  .ledger li.new { animation: rise .5s ease-out; }
+  .ledger .t { color: var(--ledger-dim); }
+  .ledger .ev { white-space: normal; overflow-wrap: anywhere; }
+  .ledger .ev .k { color: var(--ledger-ok); }
+  .ledger .ev .h { color: var(--ledger-dim); display: block; font-size: 11px; }
+  .ledger-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.08); color: var(--ledger-dim); font-size: 11px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* Facts */
+  .facts { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-2); }
+  .facts .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+  .fact { padding: 22px 18px 22px 0; border-right: 1px solid var(--line); margin-right: 18px; }
+  .fact:last-child { border-right: 0; margin-right: 0; }
+  .fact .n { font-family: var(--display); font-weight: 800; font-size: clamp(26px, 3vw, 36px); line-height: 1; font-variant-numeric: tabular-nums; }
+  .fact .l { color: var(--fg-2); font-size: 14px; margin-top: 8px; }
+
+  /* Sections */
+  section.block .wrap { padding-block: 64px; }
+  .sec-head { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 24px 40px; align-items: start; margin-bottom: 34px; }
+  .sec-head h2 { font-size: clamp(26px, 3.2vw, 38px); font-weight: 700; }
+  .sec-head p { margin: 0; color: var(--fg-2); max-width: 40em; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; }
+  .work { border-top: 2px solid var(--fg); padding-top: 16px; min-width: 0; }
+  .work h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .work p { margin: 0; color: var(--fg-2); }
+  .work .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 3px; color: var(--fg-2); }
+
+  /* Timeline */
+  .roles { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .role { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 12px 40px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+  .role .when { font-family: var(--mono); font-size: 13px; color: var(--fg-3); }
+  .role h3 { font-size: 19px; font-weight: 700; }
+  .role .org { color: var(--fg-2); font-weight: 600; font-size: 14px; margin-top: 2px; }
+  .role ul { margin: 12px 0 0; padding-left: 18px; color: var(--fg-2); }
+  .role li { margin-bottom: 6px; }
+
+  /* Project feature */
+  .feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; align-items: start; }
+  .feature pre { background: var(--ledger-bg); color: var(--ledger-fg); font-family: var(--mono); font-size: 12.5px; line-height: 1.55; padding: 18px; border-radius: 6px; overflow-x: auto; margin: 0; }
+  .feature pre .c { color: var(--ledger-dim); }
+  .feature pre .k { color: var(--ledger-ok); }
+  .feature ul { padding-left: 18px; color: var(--fg-2); margin: 14px 0 0; }
+  .feature li { margin-bottom: 8px; }
+
+  /* Principles */
+  .principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; counter-reset: p; }
+  .principle { border-top: 1px solid var(--line); padding-top: 14px; min-width: 0; }
+  .principle h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .principle p { margin: 0; color: var(--fg-2); font-size: 15px; }
+
+  /* Contact */
+  .contact { background: var(--fg); color: var(--bg); }
+  .contact .wrap { padding-block: 64px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; align-items: center; }
+  .contact h2 { font-size: clamp(30px, 4vw, 48px); font-weight: 800; }
+  .contact p { color: var(--bg); opacity: .8; margin: 10px 0 0; }
+  .contact-card { background: var(--bg); color: var(--fg); border-radius: 6px; padding: 22px; display: grid; gap: 14px; min-width: 0; }
+  .contact-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 12px; min-width: 0; }
+  .contact-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .contact-row .lab { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-3); }
+  .contact-row .val { font-weight: 600; overflow-wrap: anywhere; user-select: all; }
+  .contact-row a.val { text-decoration: none; color: var(--accent); }
+  .copy { font-family: var(--mono); font-size: 12px; background: transparent; border: 1px solid var(--line); color: var(--fg-2); padding: 5px 9px; border-radius: 3px; cursor: pointer; white-space: nowrap; }
+  .copy:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer .wrap { padding-block: 22px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--fg-3); }
+
+  @media (max-width: 860px) {
+    .hero .wrap { grid-template-columns: 1fr; padding-block: 40px 36px; }
+    .facts .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fact { border-right: 0; margin-right: 0; border-bottom: 1px solid var(--line); padding-right: 0; }
+    .fact:nth-child(odd) { border-right: 1px solid var(--line); margin-right: 18px; }
+    .fact:nth-last-child(-n+2) { border-bottom: 0; }
+    .sec-head, .grid-2, .role, .feature, .contact .wrap { grid-template-columns: 1fr; }
+    .principles { grid-template-columns: 1fr; }
+    section.block .wrap { padding-block: 48px; }
+    .nav ul { gap: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ledger li.new { animation: none; }
+    .btn:hover { transform: none; }
+  }
+</style>
+
+</head>
+<body>
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="#top">MELISSA SURACE</a>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#empreinte">Empreinte</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Identity and access engineering · New York</div>
+      <h1 style="margin-top:14px">Access that keeps up <span class="thin">with the people who need it.</span></h1>
+      <p class="lede">I build the layer between identity and everything it touches, from the HR system of record to the apps people open every day. Okta since 2017. Automation in Terraform and Python. AI agents in TypeScript that run in production, with a person approving the decision.</p>
+      <div class="hero-meta">
+        <span>Senior Analyst, Access Command at DoorDash</span>
+        <span>Formerly Head of Security at Zineniac</span>
+        <span>CySA+ · Splunk Core Certified User</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn primary" href="#work">See the work</a>
+        <a class="btn" href="https://github.com/msurace328/Empreinte" target="_blank" rel="noopener">Empreinte on GitHub</a>
+      </div>
+    </div>
+    <div class="ledger" aria-label="Illustrative hash-chained access ledger">
+      <div class="ledger-head"><span>access ledger · chain verified</span><b id="chainState">OK</b></div>
+      <ol id="ledger"></ol>
+      <div class="ledger-foot"><span>each entry carries the hash of the one before it</span><span id="ledgerCount">0 entries</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="facts" aria-label="Headline numbers">
+  <div class="wrap">
+    <div class="fact"><div class="n">2017</div><div class="l">First year administering Okta, at a hospital system</div></div>
+    <div class="fact"><div class="n">1,000+</div><div class="l">Seats on Okta Identity Engine today, across three brands</div></div>
+    <div class="fact"><div class="n">283<span style="color:var(--fg-3);font-weight:500"> / 292</span></div><div class="l">Unowned service accounts driven to a named owner</div></div>
+    <div class="fact"><div class="n">9 → 3</div><div class="l">Days of access request cycle time, before and after the access program</div></div>
+  </div>
+</div>
+
+<section class="block" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>What I build</h2>
+      <p>Four kinds of work, all in production. Each one connects a system that holds truth about a person to a system that grants them something.</p>
+    </div>
+    <div class="grid-2">
+      <article class="work">
+        <h3>Lifecycle automation from the HR system of record</h3>
+        <p>Onboarding and offboarding run from HR truth through Okta lifecycle workflows and SCIM, with custom connectors in Okta Workflows for the apps that need them. Just-in-time grants expire on their own. Access reviews feed SOX evidence instead of generating it after the fact.</p>
+        <div class="tags"><span class="tag">Okta Identity Engine</span><span class="tag">SCIM</span><span class="tag">Okta Workflows</span><span class="tag">ConductorOne</span><span class="tag">SOX ITGC</span></div>
+      </article>
+      <article class="work">
+        <h3>Device posture wired into identity</h3>
+        <p>Intune compliance baselines for BitLocker and Secure Boot plus minimum patch levels feed Entra ID Conditional Access, so a machine out of compliance is blocked from corporate resources. Jamf Pro syncs macOS into the same policy. At Zineniac, a multi-OS fleet ran in Fleet, from enrollment automation to compliance policies.</p>
+        <div class="tags"><span class="tag">Intune</span><span class="tag">Jamf Pro</span><span class="tag">Fleet (osquery)</span><span class="tag">Conditional Access</span></div>
+      </article>
+      <article class="work">
+        <h3>Identity as code, behind review</h3>
+        <p>Okta and ConductorOne are managed in Terraform with plan on the pull request and apply from CI. Terraform for AWS and GCP is scanned with Checkov and tfsec before anything lands. A change to who can reach what is reviewed the same way a change to the product is.</p>
+        <div class="tags"><span class="tag">Terraform</span><span class="tag">GitHub Actions</span><span class="tag">Checkov</span><span class="tag">tfsec</span><span class="tag">AWS and GCP IAM</span></div>
+      </article>
+      <article class="work">
+        <h3>AI agents with a human on the decision</h3>
+        <p>Three agents on Claude run in production in Python and TypeScript. They read from and reply in Slack, and one drafts provisioning for an analyst to approve. An evaluation set came before any agent took volume. I also founded the governance program that assesses AI tools and agents against a control baseline before approval.</p>
+        <div class="tags"><span class="tag">Claude API</span><span class="tag">Python</span><span class="tag">TypeScript</span><span class="tag">Slack</span><span class="tag">AI governance</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="experience" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Experience</h2>
+      <p>Nearly ten years in enterprise IT and identity, from a regulated hospital system to a public company under SOX, with a security function of my own in between.</p>
+    </div>
+    <div class="roles">
+      <div class="role">
+        <div><div class="when">Feb 2026 to present</div></div>
+        <div>
+          <h3>Senior Analyst, Access Command</h3>
+          <div class="org">DoorDash · New York</div>
+          <ul>
+            <li>Administers Okta Identity Engine and Google Workspace at more than 1,000 seats for the DoorDash workforce, with the Wolt and Deliveroo brands and outsourcing partners in scope.</li>
+            <li>Owns the access program's OKRs and built the Snowflake and Sigma reporting they are measured on. Moving requests onto the team's access platform cut manual steps per request by about 85 percent.</li>
+            <li>Escalation point for complex Okta and provisioning problems. Wrote the 76-page operating standard the team works from. Mentors five analysts.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="role">
+        <div><div class="when">Jul 2020 to Feb 2026</div></div>
+        <div>
+          <h3>Head of Security and Agentic AI</h3>
+          <div class="org">Zineniac · Teaneck, NJ</div>
+          <ul>
+            <li>Ran the company Okta tenant end to end and built the identity and API authorization architecture of the product: custom authorization servers with their own scopes and token policies, and each enterprise customer bringing its own identity provider over SAML or OIDC.</li>
+            <li>Shipped Python services on Cloud Run and Azure Functions for identity and provisioning automation. Technical owner of SOC 2 Type II and ISO 27001 audits. Incident Commander.</li>
+            <li>Led the security function with five direct reports. Built and shipped the company's generative AI learning platform, in production since 2022.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="role">
+        <div><div class="when">2017 to 2020</div></div>
+        <div>
+          <h3>Security and compliance in regulated healthcare</h3>
+          <div class="org">Amedisys Health Services · The Valley Hospital</div>
+          <ul>
+            <li>User lifecycle automation across Active Directory and LDAP, HIPAA access reviews and audit log investigations at Amedisys; Okta support and PHI audit log review at The Valley Hospital.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="role">
+        <div><div class="when">2014 to 2017</div></div>
+        <div>
+          <h3>Personal Banker, Fraud and Compliance</h3>
+          <div class="org">Capital One</div>
+          <ul><li>Fraud alerts and cases in a regulated financial institution. Where the habit of evidence started.</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="empreinte">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Empreinte</h2>
+      <p>A trust and access platform I build as sole engineer, in the open. Next.js and React in TypeScript, with the controls I would want to audit if someone else had written it.</p>
+    </div>
+    <div class="feature">
+      <div>
+        <ul>
+          <li><strong>Hash-chained audit log, computed server side.</strong> Every accept or override is written under the operator's identity with the hash of the entry before it, so tampering is evident.</li>
+          <li><strong>Agentic intake with a human in authority.</strong> A tool-using agent on the Claude API scores and dispositions applications; a person holds the decision and every outcome is logged.</li>
+          <li><strong>Role-based access control</strong> and a test suite that checks the SHA-256 implementation against NIST vectors. That suite caught a real timezone bug.</li>
+          <li><strong>Security pipeline on every push to main:</strong> the test suite and CodeQL, then a gitleaks scan of the full history and npm audit at a high-severity threshold.</li>
+        </ul>
+        <div class="cta-row"><a class="btn" href="https://github.com/msurace328/Empreinte" target="_blank" rel="noopener">Read the code</a></div>
+      </div>
+      <pre aria-label="Example audit log entries"><span class="c"># audit log, newest last. prev is the SHA-256 of the entry before.</span>
+{ seq: 1041, actor: <span class="k">"operator:ms"</span>, action: <span class="k">"intake.accept"</span>,
+  subject: "app_7f21", prev: "9c4e…b1a0", hash: "e07d…44c9" }
+{ seq: 1042, actor: <span class="k">"agent:intake"</span>, action: <span class="k">"risk.score"</span>,
+  subject: "app_7f22", score: 0.31, prev: "e07d…44c9", hash: "51aa…0e77" }
+{ seq: 1043, actor: <span class="k">"operator:ms"</span>, action: <span class="k">"intake.override"</span>,
+  subject: "app_7f22", reason: "verified by call", prev: "51aa…0e77", hash: "b39f…c2d1" }
+<span class="c"># verify: recompute each hash from (seq, actor, action, subject, prev). any edit breaks the chain.</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="approach" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How I work</h2>
+      <p>Three habits that show up in everything above.</p>
+    </div>
+    <div class="principles">
+      <div class="principle"><h3>Evidence before claims</h3><p>A control that passes a test against a configuration nobody owns is not a control. I look for the system of record first and build the dashboard on top of it, not the other way around.</p></div>
+      <div class="principle"><h3>Review everything that grants access</h3><p>Okta and ConductorOne live in Terraform behind peer review. AI reviews pull requests that change Okta permissions. Code that AI wrote gets verified before it ships, same as mine.</p></div>
+      <div class="principle"><h3>Leave the standard behind</h3><p>Runbooks and a written operating standard, plus rules files for the tools the team uses, so the next person can run what I built without me in the room.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <h2>Get in touch</h2>
+      <p>Identity, access, device and automation problems are the ones I like. If you have one, tell me about it.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-row"><div><div class="lab">Email</div><div class="val" id="emailVal">melissa.surace13@gmail.com</div></div><button class="copy" id="copyEmail" type="button">Copy</button></div>
+      <div class="contact-row"><div><div class="lab">LinkedIn</div><a class="val" href="https://linkedin.com/in/melissasurace" target="_blank" rel="noopener">linkedin.com/in/melissasurace</a></div></div>
+      <div class="contact-row"><div><div class="lab">GitHub</div><a class="val" href="https://github.com/msurace328" target="_blank" rel="noopener">github.com/msurace328</a></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Melissa Surace · New York</span>
+    <span>Built by hand. The ledger above is an illustration, not live data.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var events = [
+    ['joiner', 'hris.hire → okta.user.create', 'wolt.eng'],
+    ['grant', 'c1.jit.grant snowflake.role.analyst · expires 4h', 'ms'],
+    ['mdm', 'intune.compliance=fail → ca.block', 'mac-2291'],
+    ['review', 'access_review.q4 · 283/292 owners named', 'sox'],
+    ['agent', 'agent:provision drafted · awaiting analyst', 'req-5520'],
+    ['mover', 'hris.role_change → group.rule.recompute', 'dd.sec'],
+    ['leaver', 'hris.term → scim.deprovision ×14 apps', 'dd.cx'],
+    ['tf', 'terraform.plan okta_group_rule · 1 to add, 0 destroy', 'pr#418'],
+    ['grant', 'c1.jit.grant expired · revoked on schedule', 'ms'],
+    ['mdm', 'jamf.partner_compliance → ca.allow', 'mac-1180']
+  ];
+  var list = document.getElementById('ledger');
+  var count = document.getElementById('ledgerCount');
+  var prev = '0000';
+  var seq = 1030;
+  var i = 0;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function fakeHash(s) {
+    var h1 = 0x811c9dc5, h2 = 0x1000193;
+    for (var k = 0; k < s.length; k++) { h1 ^= s.charCodeAt(k); h1 = (h1 * 16777619) >>> 0; h2 = ((h2 << 5) - h2 + s.charCodeAt(k)) >>> 0; }
+    return (h1.toString(16) + h2.toString(16)).slice(0, 8);
+  }
+  function stamp() {
+    var d = new Date();
+    return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
+  }
+  function add(animate) {
+    var e = events[i % events.length]; i++;
+    seq++;
+    var payload = seq + '|' + e[0] + '|' + e[1] + '|' + e[2] + '|' + prev;
+    var hash = fakeHash(payload);
+    var li = document.createElement('li');
+    if (animate) li.className = 'new';
+    li.innerHTML = '<span class="t">' + stamp() + '</span><span class="ev"><span class="k">' + e[0] + '</span> ' + e[1] + ' <span class="t">· ' + e[2] + '</span><span class="h">#' + seq + ' prev ' + prev + ' → ' + hash + '</span></span>';
+    list.appendChild(li);
+    prev = hash;
+    while (list.children.length > 6) list.removeChild(list.firstChild);
+    count.textContent = (seq - 1030) + ' entries';
+  }
+  for (var n = 0; n < 5; n++) add(false);
+  if (!reduce) setInterval(function () { add(true); }, 2600);
+
+  var btn = document.getElementById('copyEmail');
+  var val = document.getElementById('emailVal');
+  btn.addEventListener('click', function () {
+    var text = val.textContent;
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(val);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = 'Copy'; }, 1600);
+      }).catch(fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+
+</body>
+</html>
